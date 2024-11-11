@@ -8,7 +8,8 @@ window.onload = function() {
     let delay = 100;
     let snakee;
     let applee;
-
+    let widthInBlocks = canvasWidth/blockSize;
+    let heightInBlocks = canvasHeight/blockSize;
     class Snake {
         constructor(body, direction) {
             this.body = body;
@@ -64,7 +65,34 @@ window.onload = function() {
                 this.direction = newDirection;
             }
         }
-    }
+        checkCollision(){
+            let wallCollision = false;
+            let snakeCollision = false;
+            let head = this.body[0];
+            let rest = this.body.slice(1);
+            let snakeX = head[0];
+            let snakeY = head[1];
+            let minX = 0;
+            let minY = 0;
+            let maxX = widthInBlocks - 1;
+            let maxY = heightInBlocks - 1;
+            let isNotBetweenHorizontalWalls = snakeX < minX || snakeX > maxX;
+            let isNotBetweenVerticalWalls = snakeY < minY || snakeY > maxY;
+
+            if (isNotBetweenHorizontalWalls || isNotBetweenVerticalWalls) {
+                wallCollision = true;
+            }
+            for (let i = 0; i < rest.length; i++) {
+
+               if (snakeX === rest[i][0] && snakeY === rest[i][1]){
+                snakeCollision = true;
+               }
+            }
+            return wallCollision || snakeCollision;
+                
+            };
+        }
+
 
     document.onkeydown = function handlekeyDown(e) {
         let key = e.keyCode;
@@ -103,11 +131,19 @@ window.onload = function() {
     }
 
     function refreshCanvas() {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         snakee.advance();
-        snakee.draw();
-        applee.draw(ctx, blockSize);
-        setTimeout(refreshCanvas, delay);
+        if (snakee.checkCollision()) {
+            
+        }
+        else{
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            snakee.draw();
+            applee.draw(ctx, blockSize);
+            setTimeout(refreshCanvas, delay);
+        }
+       
+     
+      
     }
 
     function drawBlock(ctx, position) {

@@ -4,6 +4,7 @@ export class Apple {
         this.position = position;
         
         }
+        
     draw (ctx, blockSize){
         ctx.save();
         ctx.fillStyle = "#33cc33";

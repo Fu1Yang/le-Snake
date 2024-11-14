@@ -10,6 +10,14 @@ window.onload = function() {
     let applee;
     let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
+    let score;
+
+    const backgroundMusic = new Audio("./mp3/song.mp3");
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.5;
+
+    
+
 
     class Snake {
         constructor(body, direction) {
@@ -45,7 +53,13 @@ window.onload = function() {
                     break;
             }
             this.body.unshift(nextPosition);
-            this.body.pop();
+            if (!this.ateApple) {
+                this.body.pop();
+            }
+            else{
+                this.ateApple = false;
+            }
+          
         }
 
         setDirection(newDirection) {
@@ -124,6 +138,9 @@ window.onload = function() {
             case 40:
                 newDirection = "down";
                 break;
+            case 32:
+                restart();
+                retrun ;   
             default:
                 return;
         }
@@ -136,34 +153,39 @@ window.onload = function() {
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "1px solid";
+        canvas.style.border = "30px solid blue";
         document.body.appendChild(canvas);
         ctx = canvas.getContext("2d");
+
+        backgroundMusic.play().catch(error => {
+            console.log("Erreur de lecture audio:", error);
+        });
+
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
-        applee = new Apple([10,10])
+        applee = new Apple([10,10]);
+        score = 0;
         refreshCanvas();
     }
 
     function refreshCanvas() {
         snakee.advance();
         if (snakee.checkCollision()) {
-          
-            console.log("GAME OVER");
-            
-            let texte = ctx.measureText("GAME OVER");
-            texte.width;
-            console.log(texte);
-           
-            
+            gameOver();
+            console.log("GAME OVER ");  
         }
         else{
             if (snakee.isEatingApple(applee)) {
-                applee.setNewPosition(widthInBlocks, heightInBlocks);
-          
+                score++
+                snakee.ateApple = true;
+                do{
+                    applee.setNewPosition(widthInBlocks, heightInBlocks);
+                }
+                while (applee.isOnSnake(snakee))
             }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             snakee.draw();
             applee.draw(ctx, blockSize);
+            drawScore();
             setTimeout(refreshCanvas, delay);
         }
        
@@ -176,4 +198,28 @@ window.onload = function() {
         let y = position[1] * blockSize;
         ctx.fillRect(x, y, blockSize, blockSize);
     }
+
+
+    function gameOver(){
+        backgroundMusic.pause();
+        ctx.save();
+        ctx.fillText("Game Over !!!",  5, 15 );
+        ctx.fillText("Appuyer sur la touche Espace, pour rejouer", 5, 30);
+        ctx.restore();
+    }
+
+    function restart(){
+        snakee = new Snake([[6,4], [5,4], [4,4]], "right");
+        score = 0;
+        applee = new Apple([10,10]);
+        refreshCanvas(); 
+    }
+
+    function drawScore(){
+        ctx.save();
+        ctx.fillText(score.toString(), 5, canvasHeight - 5);
+        ctx.restore();
+    }
+
+
 };

@@ -23,5 +23,15 @@ export class Apple {
         let newY = Math.round(Math.random() * (heightInBlocks - 1));
         this.position = [newX, newY];
         }
+    
+    isOnSnake(snakeToCheck){
+        const isOnSnake = false;
+        for(let i = 0; i < snakeToCheck.body.length; i++){
+            if (this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1]) {
+                isOnSnake = true;
+            }
+            return isOnSnake;
+        }
+    }    
         
 }

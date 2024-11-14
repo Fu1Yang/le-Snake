@@ -1,6 +1,6 @@
 import {Apple} from './apple.js'
 window.onload = function() {
-   
+
     let canvasWidth = 900;
     let canvasHeight = 600;
     let blockSize = 30;
@@ -10,6 +10,7 @@ window.onload = function() {
     let applee;
     let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
+
     class Snake {
         constructor(body, direction) {
             this.body = body;
@@ -65,6 +66,8 @@ window.onload = function() {
                 this.direction = newDirection;
             }
         }
+
+     
         checkCollision(){
             let wallCollision = false;
             let snakeCollision = false;
@@ -91,8 +94,19 @@ window.onload = function() {
             return wallCollision || snakeCollision;
                 
             };
-        }
+        isEatingApple(appleToEat){
+            let head = this.body[0];
+            if (head[0] === appleToEat.position[0] && head[1]=== appleToEat.position[1]) {
+                   
+                 return true;
+            }else{
+                return false;
+                }
+        
+            };
 
+        }
+     
 
     document.onkeydown = function handlekeyDown(e) {
         let key = e.keyCode;
@@ -133,9 +147,20 @@ window.onload = function() {
     function refreshCanvas() {
         snakee.advance();
         if (snakee.checkCollision()) {
+          
+            console.log("GAME OVER");
+            
+            let texte = ctx.measureText("GAME OVER");
+            texte.width;
+            console.log(texte);
+           
             
         }
         else{
+            if (snakee.isEatingApple(applee)) {
+                applee.setNewPosition(widthInBlocks, heightInBlocks);
+          
+            }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             snakee.draw();
             applee.draw(ctx, blockSize);

@@ -18,5 +18,10 @@ export class Apple {
         }
 
     
-
+    setNewPosition(widthInBlocks, heightInBlocks) {
+        let newX = Math.round(Math.random() * (widthInBlocks - 1));
+        let newY = Math.round(Math.random() * (heightInBlocks - 1));
+        this.position = [newX, newY];
+        }
+        
 }

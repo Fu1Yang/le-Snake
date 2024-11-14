@@ -153,13 +153,19 @@ window.onload = function() {
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "30px solid blue";
+        canvas.style.border = "10px solid blue";
+        canvas.style.margin = "50px auto";
+        canvas.style.display = "block";
+        canvas.style.backgroundImage = "url(./image/snake.jpg)";
+        canvas.style.backgroundSize = "cover";
+        canvas.style.backgroundPosition = "center"; // Centre l'image
         document.body.appendChild(canvas);
         ctx = canvas.getContext("2d");
 
-        backgroundMusic.play().catch(error => {
-            console.log("Erreur de lecture audio:", error);
-        });
+        // backgroundMusic.play().catch(error => {
+        //     console.log("Erreur de lecture audio:", error);
+        // });
+
 
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
         applee = new Apple([10,10]);
@@ -217,6 +223,7 @@ window.onload = function() {
 
     function drawScore(){
         ctx.save();
+        ctx.font = "bold 200px sans-serif";
         ctx.fillText(score.toString(), 5, canvasHeight - 5);
         ctx.restore();
     }

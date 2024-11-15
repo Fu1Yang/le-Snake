@@ -11,13 +11,21 @@ window.onload = function() {
     let widthInBlocks = canvasWidth/blockSize;
     let heightInBlocks = canvasHeight/blockSize;
     let score;
+    let timeout;
 
     const backgroundMusic = new Audio("./mp3/song.mp3");
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.5;
 
     
-
+    const gameOverMusic = new Audio("./mp3/game-over.mp3");
+    gameOverMusic.loop = false;
+    gameOverMusic.volume = 0.5;
+    
+    
+    const eatingMusic = new Audio("./mp3/eating.mp3");
+    eatingMusic.loop = false;
+    eatingMusic.volume = 0.5;
 
     class Snake {
         constructor(body, direction) {
@@ -140,7 +148,7 @@ window.onload = function() {
                 break;
             case 32:
                 restart();
-                retrun ;   
+                return;   
             default:
                 return;
         }
@@ -162,9 +170,9 @@ window.onload = function() {
         document.body.appendChild(canvas);
         ctx = canvas.getContext("2d");
 
-        // backgroundMusic.play().catch(error => {
-        //     console.log("Erreur de lecture audio:", error);
-        // });
+        backgroundMusic.play().catch(error => {
+            console.log("Erreur de lecture audio:", error);
+        });
 
 
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
@@ -183,6 +191,9 @@ window.onload = function() {
             if (snakee.isEatingApple(applee)) {
                 score++
                 snakee.ateApple = true;
+               eatingMusic.play().catch(error => {
+                    console.log("Erreur de lecture audio:", error);
+                });
                 do{
                     applee.setNewPosition(widthInBlocks, heightInBlocks);
                 }
@@ -192,8 +203,7 @@ window.onload = function() {
             drawScore();
             snakee.draw();
             applee.draw(ctx, blockSize);
-        
-            setTimeout(refreshCanvas, delay);
+            timeout = setTimeout(refreshCanvas, delay);
         }
        
      
@@ -209,6 +219,9 @@ window.onload = function() {
 
     function gameOver(){
         backgroundMusic.pause();
+        gameOverMusic.play().catch(error => {
+            console.log("Erreur de lecture audio:", error);
+        });
         ctx.save();
         ctx.font = "bold 40px sans-serif";
         ctx.fillStyle = "red";
@@ -224,17 +237,30 @@ window.onload = function() {
         snakee = new Snake([[6,4], [5,4], [4,4]], "right");
         score = 0;
         applee = new Apple([10,10]);
+        clearTimeout(timeout);
         refreshCanvas(); 
     }
 
     function drawScore(){
         ctx.save();
-        ctx.font = "bold 200px sans-serif";
-        ctx.fillStyle = "white";
-        ctx.textBaseline = "middle";
-        const centreX = canvasWidth / 2;
-        const centreY = canvasHeight / 2;
-        ctx.fillText(score.toString(), centreX - 50, centreY  );
+        if (score < 10) {
+            ctx.font = "bold 200px sans-serif";
+            ctx.fillStyle = "white";
+            ctx.textBaseline = "middle";
+            const centreX = canvasWidth / 2;
+            const centreY = canvasHeight / 2;
+            ctx.fillText(score.toString(), centreX - 50, centreY  )
+        }
+        else {
+            ctx.font = "bold 200px sans-serif";
+            ctx.fillStyle = "white";
+            ctx.textBaseline = "middle";
+            const centreX = canvasWidth / 2;
+            const centreY = canvasHeight / 2;
+            ctx.fillText(score.toString(), centreX - 100, centreY  )
+        }
+    ;
+
         ctx.restore();
     }
 

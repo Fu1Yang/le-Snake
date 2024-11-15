@@ -7,7 +7,7 @@ export class Apple {
         
     draw (ctx, blockSize){
         ctx.save();
-        ctx.fillStyle = "#33cc33";
+        ctx.fillStyle = "#FF0000";
         let radius = blockSize / 2;
         let x = this.position[0]*blockSize + radius;
         let y = this.position[1]*blockSize + radius;
